@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 
 namespace Huobi.Net.Objects
 {
-    public class HuobiOrderUpdate
+    public class HuobiOrderUpdate : IHuobiOrder
     {
         /// <summary>
         /// The id of the order

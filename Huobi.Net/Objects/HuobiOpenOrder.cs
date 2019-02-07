@@ -6,7 +6,7 @@ using System;
 
 namespace Huobi.Net.Objects
 {
-    public class HuobiOpenOrder
+    public class HuobiOpenOrder : IHuobiOrder
     {
         /// <summary>
         /// The id of the order
