@@ -1,6 +1,7 @@
-﻿using System;
+﻿using Huobi.Net.Objects;
+using System;
 
-namespace Huobi.Net.Objects
+namespace Huobi.Net.Interfaces
 {
     public interface IHuobiOrder
     {

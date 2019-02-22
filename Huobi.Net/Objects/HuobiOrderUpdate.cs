@@ -2,6 +2,7 @@
 using CryptoExchange.Net.Attributes;
 using CryptoExchange.Net.Converters;
 using Huobi.Net.Converters;
+using Huobi.Net.Interfaces;
 using Newtonsoft.Json;
 
 namespace Huobi.Net.Objects
