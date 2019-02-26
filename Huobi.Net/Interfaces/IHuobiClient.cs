@@ -326,7 +326,7 @@ namespace Huobi.Net.Interfaces
         /// <param name="fromId">Only get orders with id's higher than this</param>
         /// <param name="limit">The max number of results</param>
         /// <returns></returns>
-        CallResult<List<HuobiOrder>> GetOrders(string symbol, IEnumerable<HuobiOrderState> states, IEnumerable<HuobiOrderType> types = null, DateTime? startTime = null, DateTime? endTime = null, long? fromId = null, int? limit = null);
+        CallResult<List<HuobiOrder>> GetOrders(IEnumerable<HuobiOrderState> states, string symbol = null, IEnumerable<HuobiOrderType> types = null, DateTime? startTime = null, DateTime? endTime = null, long? fromId = null, int? limit = null);
 
         /// <summary>
         /// Gets a list of orders
@@ -339,7 +339,7 @@ namespace Huobi.Net.Interfaces
         /// <param name="fromId">Only get orders with id's higher than this</param>
         /// <param name="limit">The max number of results</param>
         /// <returns></returns>
-        Task<CallResult<List<HuobiOrder>>> GetOrdersAsync(string symbol, IEnumerable<HuobiOrderState> states, IEnumerable<HuobiOrderType> types = null, DateTime? startTime = null, DateTime? endTime = null, long? fromId = null, int? limit = null);
+        Task<CallResult<List<HuobiOrder>>> GetOrdersAsync(IEnumerable<HuobiOrderState> states, string symbol = null, IEnumerable<HuobiOrderType> types = null, DateTime? startTime = null, DateTime? endTime = null, long? fromId = null, int? limit = null);
 
         /// <summary>
         /// Gets a list of trades for a specific symbol

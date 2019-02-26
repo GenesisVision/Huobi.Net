@@ -559,7 +559,7 @@ namespace Huobi.Net
         /// <param name="fromId">Only get orders with id's higher than this</param>
         /// <param name="limit">The max number of results</param>
         /// <returns></returns>
-        public CallResult<List<HuobiOrder>> GetOrders(string symbol, IEnumerable<HuobiOrderState> states, IEnumerable<HuobiOrderType> types = null, DateTime? startTime = null, DateTime? endTime = null, long? fromId = null, int? limit = null) => GetOrdersAsync(symbol, states, types, startTime, endTime, fromId, limit).Result;
+        public CallResult<List<HuobiOrder>> GetOrders(IEnumerable<HuobiOrderState> states, string symbol = null, IEnumerable<HuobiOrderType> types = null, DateTime? startTime = null, DateTime? endTime = null, long? fromId = null, int? limit = null) => GetOrdersAsync(states, symbol, types, startTime, endTime, fromId, limit).Result;
         /// <summary>
         /// Gets a list of orders
         /// </summary>
@@ -571,15 +571,15 @@ namespace Huobi.Net
         /// <param name="fromId">Only get orders with id's higher than this</param>
         /// <param name="limit">The max number of results</param>
         /// <returns></returns>
-        public async Task<CallResult<List<HuobiOrder>>> GetOrdersAsync(string symbol, IEnumerable<HuobiOrderState> states, IEnumerable<HuobiOrderType> types = null, DateTime? startTime = null, DateTime? endTime = null, long? fromId = null, int? limit = null)
+        public async Task<CallResult<List<HuobiOrder>>> GetOrdersAsync(IEnumerable<HuobiOrderState> states, string symbol = null, IEnumerable<HuobiOrderType> types = null, DateTime? startTime = null, DateTime? endTime = null, long? fromId = null, int? limit = null)
         {
             var stateConverter = new OrderStateConverter(false);
             var typeConverter = new OrderTypeConverter(false);
             var parameters = new Dictionary<string, object>
             {
-                { "symbol", symbol },
                 { "states", string.Join(",", states.Select(s => JsonConvert.SerializeObject(s, stateConverter))) }
             };
+            parameters.AddOptionalParameter("symbol", symbol);
             parameters.AddOptionalParameter("start-date", startTime?.ToString("yyyy-MM-dd"));
             parameters.AddOptionalParameter("end-date", endTime?.ToString("yyyy-MM-dd"));
             parameters.AddOptionalParameter("types", types == null ? null : string.Join(",", types.Select(s => JsonConvert.SerializeObject(s, typeConverter))));
