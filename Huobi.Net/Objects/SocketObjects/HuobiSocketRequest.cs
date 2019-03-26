@@ -1,4 +1,5 @@
-﻿using CryptoExchange.Net.Sockets;
+﻿using System;
+using CryptoExchange.Net.Sockets;
 using Newtonsoft.Json;
 
 namespace Huobi.Net.Objects.SocketObjects
@@ -9,7 +10,7 @@ namespace Huobi.Net.Objects.SocketObjects
         public string Id { get; set; }
     }
 
-    internal class HuobiKlinSocketRequest : HuobiRequest
+    internal class HuobiKlineSocketRequest : HuobiRequest
     {
         [JsonProperty("req")]
         public string Request { get; set; }
@@ -23,12 +24,14 @@ namespace Huobi.Net.Objects.SocketObjects
         [JsonProperty("to")]
         public long To { get; set; }
 
-        public HuobiKlinSocketRequest(string topic, long from, long to)
+        public HuobiKlineSocketRequest(string topic, DateTime from, DateTime to)
         {
             Request = topic;
             Signed = false;
-            From = from;
-            To = to;
+
+            var unixEpoch = new DateTime(1970, 1, 1);
+            From = (long)(from - unixEpoch).TotalSeconds;
+            To = (long)(to - unixEpoch).TotalSeconds;
         }
     }
 
