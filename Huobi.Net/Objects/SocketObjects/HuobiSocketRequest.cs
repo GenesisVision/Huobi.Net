@@ -9,7 +9,7 @@ namespace Huobi.Net.Objects.SocketObjects
         public string Id { get; set; }
     }
 
-    internal class HuobiSocketRequest: HuobiRequest
+    internal class HuobiKlinSocketRequest : HuobiRequest
     {
         [JsonProperty("req")]
         public string Request { get; set; }
@@ -17,6 +17,28 @@ namespace Huobi.Net.Objects.SocketObjects
         [JsonProperty("id")]
         public new string Id { get; set; }
 
+        [JsonProperty("from")]
+        public long From { get; set; }
+
+        [JsonProperty("to")]
+        public long To { get; set; }
+
+        public HuobiKlinSocketRequest(string topic, long from, long to)
+        {
+            Request = topic;
+            Signed = false;
+            From = from;
+            To = to;
+        }
+    }
+
+    internal class HuobiSocketRequest: HuobiRequest
+    {
+        [JsonProperty("req")]
+        public string Request { get; set; }
+
+        [JsonProperty("id")]
+        public new string Id { get; set; }
 
         public HuobiSocketRequest(string topic)
         {
