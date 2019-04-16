@@ -80,4 +80,12 @@
         MarginRepay,
         Other
     }
+
+    public enum HuobiTransferType
+    {
+        FromSubAccount,
+        ToSubAccount,
+        PointFromSubAccount,
+        PointToSubAccount
+    }
 }
