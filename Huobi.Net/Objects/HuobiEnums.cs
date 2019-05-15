@@ -54,7 +54,9 @@
         IOCBuy,
         IOCSell,
         LimitMakerBuy,
-        LimitMakerSell
+        LimitMakerSell,
+		StopLimitBuy,
+		StopLimitSell
     }
 
     public enum HuobiOrderState
