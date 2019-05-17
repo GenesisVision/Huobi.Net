@@ -66,7 +66,8 @@
         PartiallyFilled,
         PartiallyCanceled,
         Filled,
-        Canceled
+        Canceled,
+        Created
     }
 
     public enum HuobiAccountEventType
