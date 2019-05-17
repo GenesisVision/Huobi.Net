@@ -103,7 +103,7 @@ namespace Huobi.Net
         /// <returns></returns>
         public async Task<CallResult<List<HuobiMarketKline>>> QueryHistoryMarketKlinesAsync(string symbol, HuobiPeriod period, DateTime from, DateTime to)
         {
-            var request = new HuobiKlineSocketRequest($"market.{symbol}.kline.{JsonConvert.SerializeObject(period, new PeriodConverter(false))}", from, to);
+            var request = new HuobiKlineSocketRequest(NextId().ToString(), $"market.{symbol}.kline.{JsonConvert.SerializeObject(period, new PeriodConverter(false))}", from, to);
 
             var result = await Query<HuobiSocketResponse<List<HuobiMarketKline>>>(request, false).ConfigureAwait(false);
             return new CallResult<List<HuobiMarketKline>>(result.Data?.Data, result.Error);
