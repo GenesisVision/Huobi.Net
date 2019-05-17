@@ -4,13 +4,20 @@
     {
         OneMinute,
         FiveMinutes,
-        FiveteenMinutes,
+        FifteenMinutes,
         ThirtyMinutes,
         OneHour,
+        FourHours,
         OneDay,
         OneWeek,
         OneMonth,
         OneYear
+    }
+
+    public enum HuobiFilterDirection
+    {
+        Next,
+        Previous
     }
 
     public enum HuobiOrderSide

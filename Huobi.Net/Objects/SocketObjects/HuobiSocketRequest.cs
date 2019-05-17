@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace Huobi.Net.Objects.SocketObjects
 {
-    internal class HuobiRequest: SocketRequest
+    internal class HuobiRequest
     {
         [JsonIgnore]
         public string Id { get; set; }
@@ -27,7 +27,6 @@ namespace Huobi.Net.Objects.SocketObjects
         public HuobiKlineSocketRequest(string topic, DateTime from, DateTime to)
         {
             Request = topic;
-            Signed = false;
 
             var unixEpoch = new DateTime(1970, 1, 1);
             From = (long)(from - unixEpoch).TotalSeconds;
@@ -43,10 +42,10 @@ namespace Huobi.Net.Objects.SocketObjects
         [JsonProperty("id")]
         public new string Id { get; set; }
 
-        public HuobiSocketRequest(string topic)
+        public HuobiSocketRequest(string id, string topic)
         {
+            Id = id;
             Request = topic;
-            Signed = false;
         }
     }
 
@@ -59,11 +58,11 @@ namespace Huobi.Net.Objects.SocketObjects
         [JsonProperty("cid")]
         public new string Id { get; set; }
 
-        public HuobiAuthenticatedRequest(string operation, string topic)
+        public HuobiAuthenticatedRequest(string id, string operation, string topic)
         {
+            Id = id;
             Operation = operation;
             Topic = topic;
-            Signed = true;
         }
     }
 
@@ -74,10 +73,10 @@ namespace Huobi.Net.Objects.SocketObjects
         [JsonProperty("id")]
         public new string Id { get; set; }
 
-        public HuobiSubscribeRequest(string topic, bool signed = false)
+        public HuobiSubscribeRequest(string id, string topic)
         {
+            Id = id;
             Topic = topic;
-            Signed = signed;
         }
     }
 
@@ -100,7 +99,7 @@ namespace Huobi.Net.Objects.SocketObjects
         [JsonProperty("size")]
         public string Limit { get; set; }
 
-        public HuobiOrderListRequest(long accountId, string symbol, string states): base("req", "orders.list")
+        public HuobiOrderListRequest(string id, long accountId, string symbol, string states): base(id, "req", "orders.list")
         {
             AccountId = accountId;
             Symbol = symbol;
@@ -113,7 +112,7 @@ namespace Huobi.Net.Objects.SocketObjects
         [JsonProperty("order-id")]
         public string OrderId { get; set; }
 
-        public HuobiOrderDetailsRequest(string orderId): base("req", "orders.detail")
+        public HuobiOrderDetailsRequest(string id, string orderId): base(id, "req", "orders.detail")
         {
             OrderId = orderId;
         }

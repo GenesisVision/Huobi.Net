@@ -5,9 +5,21 @@ namespace Huobi.Net
 {
     public class HuobiClientOptions: ClientOptions
     {
+        /// <summary>
+        /// Whether public requests should be signed if ApiCredentials are provided. Needed for accurate rate limiting.
+        /// </summary>
+        public bool SignPublicRequests { get; set; } = false;
+
         public HuobiClientOptions()
         {
             BaseAddress = "https://api.huobi.pro";
+        }
+
+        public HuobiClientOptions Copy()
+        {
+            var copy = Copy<HuobiClientOptions>();
+            copy.SignPublicRequests = SignPublicRequests;
+            return copy;
         }
     }
 
@@ -18,21 +30,16 @@ namespace Huobi.Net
         /// </summary>
         public string BaseAddressAuthenticated { get; set; } = "wss://api.huobi.pro/ws/v1";
 
-        /// <summary>
-        /// The timeout for socket responses
-        /// </summary>
-        public TimeSpan SocketResponseTimeout { get; set; } = TimeSpan.FromSeconds(5);
-
         public HuobiSocketClientOptions()
         {
             BaseAddress = "wss://api.huobi.pro/ws";
+            SocketSubscriptionsCombineTarget = 10;
         }
 
         public HuobiSocketClientOptions Copy()
         {
             var copy = Copy<HuobiSocketClientOptions>();
             copy.BaseAddressAuthenticated = BaseAddressAuthenticated;
-            copy.SocketResponseTimeout = SocketResponseTimeout;
             return copy;
         }
     }
