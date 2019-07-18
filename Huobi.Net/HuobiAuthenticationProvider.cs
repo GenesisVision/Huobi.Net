@@ -14,15 +14,17 @@ namespace Huobi.Net
     {
         private readonly HMACSHA256 encryptor;
         private readonly object encryptLock = new object();
+        private readonly bool signPublicRequests;
 
-        public HuobiAuthenticationProvider(ApiCredentials credentials) : base(credentials)
+        public HuobiAuthenticationProvider(ApiCredentials credentials, bool signPublicRequests) : base(credentials)
         {
+            this.signPublicRequests = signPublicRequests;
             encryptor = new HMACSHA256(Encoding.ASCII.GetBytes(credentials.Secret.GetString()));
         }
 
         public override Dictionary<string, object> AddAuthenticationToParameters(string uri, string method, Dictionary<string, object> parameters, bool signed)
         {
-            if (!signed)
+            if (!signed && !signPublicRequests)
                 return parameters;
 
             var uriObj = new Uri(uri);
@@ -45,9 +47,14 @@ namespace Huobi.Net
             var paramString = signParameters.CreateParamString(true);
             signParameters = signParameters.OrderBy(kv => kv.Key).ToDictionary(k => k.Key, k => k.Value);
 
+            var absolutePath = uriObj.AbsolutePath;
+            if (absolutePath.StartsWith("/api"))
+                // Russian api has /api prefix which shouldn't be part of the signature
+                absolutePath = absolutePath.Substring(4);
+
             var signData = method + "\n";
             signData += uriObj.Host + "\n";
-            signData += uriObj.AbsolutePath + "\n";
+            signData += absolutePath + "\n";
             signData += paramString;
             byte[] signBytes;
             lock(encryptLock)

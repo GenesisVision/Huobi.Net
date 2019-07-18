@@ -4,13 +4,20 @@
     {
         OneMinute,
         FiveMinutes,
-        FiveteenMinutes,
+        FifteenMinutes,
         ThirtyMinutes,
         OneHour,
+        FourHours,
         OneDay,
         OneWeek,
         OneMonth,
         OneYear
+    }
+
+    public enum HuobiFilterDirection
+    {
+        Next,
+        Previous
     }
 
     public enum HuobiOrderSide
@@ -36,7 +43,9 @@
     public enum HuobiBalanceType
     {
         Trade,
-        Frozen
+        Frozen,
+        Loan,
+        Interest
     }
 
     public enum HuobiOrderRole
@@ -90,5 +99,13 @@
         ToSubAccount,
         PointFromSubAccount,
         PointToSubAccount
+    }
+
+    public enum HuobiSymbolState
+    {
+        Online,
+        Offline,
+        Suspended,
+        PreOnline
     }
 }
