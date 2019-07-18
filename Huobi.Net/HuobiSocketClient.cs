@@ -84,7 +84,7 @@ namespace Huobi.Net
         }
 
         /// <summary>
-        /// Gets history candlestick data for a symbol (undocumented feature)
+        /// Gets history candlestick data for a symbol
         /// </summary>
         /// <param name="symbol">The symbol to get the data for</param>
         /// <param name="period">The period of a single candlestick</param>
@@ -94,7 +94,7 @@ namespace Huobi.Net
         public CallResult<List<HuobiMarketKline>> QueryHistoryMarketKlines(string symbol, HuobiPeriod period, DateTime from, DateTime to) => QueryHistoryMarketKlinesAsync(symbol, period, from, to).Result;
 
         /// <summary>
-        /// Gets history candlestick data for a symbol (undocumented feature)
+        /// Gets history candlestick data for a symbol
         /// </summary>
         /// <param name="symbol">The symbol to get the data for</param>
         /// <param name="period">The period of a single candlestick</param>
@@ -492,6 +492,8 @@ namespace Huobi.Net
         protected override bool HandleQueryResponse<T>(SocketConnection s, object request, JToken data, out CallResult<T> callResult)
         {
             callResult = new CallResult<T>(default(T), null);
+            if (data["ping"] != null)
+                return false;
             var v1Data = (data["data"] != null || data["tick"] != null) && data["rep"] != null;
             var v1Error = data["status"] != null && (string)data["status"] == "error";
             bool isV1QueryResponse = v1Data || v1Error;
