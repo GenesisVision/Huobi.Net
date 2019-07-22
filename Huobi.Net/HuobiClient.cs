@@ -387,7 +387,7 @@ namespace Huobi.Net
             if (!result.Success)
                 return WebCallResult<List<HuobiBalance>>.CreateErrorResult(result.ResponseStatusCode, result.ResponseHeaders, result.Error);
 
-            return new WebCallResult<List<HuobiBalance>>(result.ResponseStatusCode, result.ResponseHeaders, result.Data.Data[0].Data, result.Error);
+            return new WebCallResult<List<HuobiBalance>>(result.ResponseStatusCode, result.ResponseHeaders, result.Data.Data.FirstOrDefault()?.Data ?? new List<HuobiBalance>(), result.Error);
         }
 
         /// <summary>
