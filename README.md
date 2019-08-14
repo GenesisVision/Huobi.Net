@@ -80,6 +80,15 @@ Huobi.Net provides two clients to interact with the Huobi API. The `HuobiClient`
 Examples can be found in the Examples folder.
 
 ## Release notes
+* Version 1.1.8 - 07 Aug 2019
+    * Updated CryptoExchange.Net
+
+* Version 1.1.7 - 05 Aug 2019
+    * added code docs xml
+
+* Version 1.1.6 - 01 Aug 2019
+    * Added HistoryOrders endpoint, made symbol parameter optional for order retrieving methods
+
 * Version 1.1.5 - 09 jul 2019
 	* Updated HuobiSymbolOrderBook
 
