@@ -468,6 +468,26 @@
             <param name="period">The period of a single candlestick</param>
             <returns></returns>
         </member>
+        <member name="M:Huobi.Net.HuobiSocketClient.QueryHistoryMarketKlines(System.String,Huobi.Net.Objects.HuobiPeriod,System.DateTime,System.DateTime)">
+            <summary>
+            Gets history candlestick data for a symbol
+            </summary>
+            <param name="symbol">The symbol to get the data for</param>
+            <param name="period">The period of a single candlestick</param>
+            <param name="from">timestamp start</param>
+            <param name="to">timestamp end</param>
+            <returns></returns>
+        </member>
+        <member name="M:Huobi.Net.HuobiSocketClient.QueryHistoryMarketKlinesAsync(System.String,Huobi.Net.Objects.HuobiPeriod,System.DateTime,System.DateTime)">
+            <summary>
+            Gets history candlestick data for a symbol
+            </summary>
+            <param name="symbol">The symbol to get the data for</param>
+            <param name="period">The period of a single candlestick</param>
+            <param name="from">timestamp start</param>
+            <param name="to">timestamp end</param>
+            <returns></returns>
+        </member>
         <member name="M:Huobi.Net.HuobiSocketClient.SubscribeToMarketKlineUpdates(System.String,Huobi.Net.Objects.HuobiPeriod,System.Action{Huobi.Net.Objects.HuobiMarketKline})">
             <summary>
             Subscribes to candlestick updates for a symbol
