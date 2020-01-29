@@ -92,7 +92,7 @@ namespace Huobi.Net
         /// <param name="from">timestamp start</param>
         /// <param name="to">timestamp end</param>
         /// <returns></returns>
-        public CallResult<List<HuobiMarketKline>> QueryHistoryMarketKlines(string symbol, HuobiPeriod period, DateTime from, DateTime to) => QueryHistoryMarketKlinesAsync(symbol, period, from, to).Result;
+        public CallResult<List<HuobiKline>> QueryHistoryMarketKlines(string symbol, HuobiPeriod period, DateTime from, DateTime to) => QueryHistoryMarketKlinesAsync(symbol, period, from, to).Result;
 
         /// <summary>
         /// Gets history candlestick data for a symbol
@@ -102,12 +102,12 @@ namespace Huobi.Net
         /// <param name="from">timestamp start</param>
         /// <param name="to">timestamp end</param>
         /// <returns></returns>
-        public async Task<CallResult<List<HuobiMarketKline>>> QueryHistoryMarketKlinesAsync(string symbol, HuobiPeriod period, DateTime from, DateTime to)
+        public async Task<CallResult<List<HuobiKline>>> QueryHistoryMarketKlinesAsync(string symbol, HuobiPeriod period, DateTime from, DateTime to)
         {
             var request = new HuobiKlineSocketRequest(NextId().ToString(), $"market.{symbol}.kline.{JsonConvert.SerializeObject(period, new PeriodConverter(false))}", from, to);
 
-            var result = await Query<HuobiSocketResponse<List<HuobiMarketKline>>>(request, false).ConfigureAwait(false);
-            return new CallResult<List<HuobiMarketKline>>(result.Data?.Data, result.Error);
+            var result = await Query<HuobiSocketResponse<List<HuobiKline>>>(request, false).ConfigureAwait(false);
+            return new CallResult<List<HuobiKline>>(result.Data?.Data, result.Error);
         }
 
         /// <summary>
