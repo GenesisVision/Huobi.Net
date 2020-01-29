@@ -1,5 +1,4 @@
 ﻿using System;
-using CryptoExchange.Net.Sockets;
 using Newtonsoft.Json;
 
 namespace Huobi.Net.Objects.SocketObjects
@@ -7,7 +6,7 @@ namespace Huobi.Net.Objects.SocketObjects
     internal class HuobiRequest
     {
         [JsonIgnore]
-        public string Id { get; set; }
+        public string? Id { get; set; }
     }
 
     internal class HuobiKlineSocketRequest : HuobiSocketRequest
@@ -81,15 +80,15 @@ namespace Huobi.Net.Objects.SocketObjects
         [JsonProperty("states")]
         public string States { get; set; }
         [JsonProperty("types")]
-        public string Types { get; set; }
+        public string? Types { get; set; }
         [JsonProperty("start-date")]
-        public string StartTime { get; set; }
+        public string? StartTime { get; set; }
         [JsonProperty("end-date")]
-        public string EndTime { get; set; }
+        public string? EndTime { get; set; }
         [JsonProperty("from")]
-        public string FromId { get; set; }
+        public string? FromId { get; set; }
         [JsonProperty("size")]
-        public string Limit { get; set; }
+        public string? Limit { get; set; }
 
         public HuobiOrderListRequest(string id, long accountId, string symbol, string states): base(id, "req", "orders.list")
         {

@@ -1,4 +1,4 @@
-# ![Icon](https://github.com/JKorf/Huobi.Net/blob/master/Resources/icon.png?raw=true) Huobi.Net 
+# ![Icon](https://github.com/JKorf/Huobi.Net/blob/master/Huobi.Net/Icon/icon.png?raw=true) Huobi.Net 
 
 ![Build status](https://travis-ci.org/JKorf/Huobi.Net.svg?branch=master)
 
@@ -12,26 +12,31 @@ Implementation is build upon the CryptoExchange.Net library, make sure to also c
 Other CryptoExchange.Net implementations:
 <table>
 <tr>
-<td><a href="https://github.com/JKorf/Bittrex.Net"><img src="https://github.com/JKorf/Bittrex.Net/blob/master/Resources/icon.png?raw=true"></a>
+<td><a href="https://github.com/JKorf/Bittrex.Net"><img src="https://github.com/JKorf/Bittrex.Net/blob/master/Bittrex.Net/Icon/icon.png?raw=true"></a>
 <br />
 <a href="https://github.com/JKorf/Bittrex.Net">Bittrex</a>
 </td>
-<td><a href="https://github.com/JKorf/Bitfinex.Net"><img src="https://github.com/JKorf/Bitfinex.Net/blob/master/Resources/icon.png?raw=true"></a>
+<td><a href="https://github.com/JKorf/Bitfinex.Net"><img src="https://github.com/JKorf/Bitfinex.Net/blob/master/Bitfinex.Net/Icon/icon.png?raw=true"></a>
 <br />
 <a href="https://github.com/JKorf/Bitfinex.Net">Bitfinex</a>
 </td>
-<td><a href="https://github.com/JKorf/Binance.Net"><img src="https://github.com/JKorf/Binance.Net/blob/master/Resources/binance-coin.png?raw=true"></a>
+<td><a href="https://github.com/JKorf/Binance.Net"><img src="https://github.com/JKorf/Binance.Net/blob/master/Binance.Net/Icon/icon.png?raw=true"></a>
 <br />
 <a href="https://github.com/JKorf/Binance.Net">Binance</a>
 </td>
-<td><a href="https://github.com/JKorf/CoinEx.Net"><img src="https://github.com/JKorf/CoinEx.Net/blob/master/Resources/icon.png?raw=true"></a>
+<td><a href="https://github.com/JKorf/CoinEx.Net"><img src="https://github.com/JKorf/CoinEx.Net/blob/master/CoinEx.Net/Icon/icon.png?raw=true"></a>
 <br />
 <a href="https://github.com/JKorf/CoinEx.Net">CoinEx</a>
 </td>
-<td><a href="https://github.com/JKorf/Kucoin.Net"><img src="https://github.com/JKorf/Kucoin.Net/blob/master/Resources/icon.png?raw=true"></a>
+<td><a href="https://github.com/JKorf/Kucoin.Net"><img src="https://github.com/JKorf/Kucoin.Net/blob/master/Kucoin.Net/Icon/icon.png?raw=true"></a>
 <br />
 <a href="https://github.com/JKorf/Kucoin.Net">Kucoin</a>
 </td>
+<td><a href="https://github.com/JKorf/Kraken.Net"><img src="https://github.com/JKorf/Kraken.Net/blob/master/Kraken.Net/Icon/icon.png?raw=true"></a>
+<br />
+<a href="https://github.com/JKorf/Kraken.Net">Kraken</a>
+</td>
+</tr>
 </table>
 Implementations from third parties:
 <table>
@@ -43,6 +48,10 @@ Implementations from third parties:
 	<td><a href="https://github.com/ridicoulous/LiquidQuoine.Net"><img src="https://github.com/ridicoulous/LiquidQuoine.Net/blob/master/Resources/icon.png?raw=true"></a>
 <br />
 <a href="https://github.com/ridicoulous/LiquidQuoine.Net">Liquid</a>
+</td>
+<td><a href="https://github.com/burakoner/OKEx.Net"><img src="https://raw.githubusercontent.com/burakoner/OKEx.Net/master/Okex.Net/Icon/icon.png"></a>
+<br />
+<a href="https://github.com/burakoner/OKEx.Net">OKEx</a>
 </td>
 </tr>
 </table>
@@ -80,6 +89,30 @@ Huobi.Net provides two clients to interact with the Huobi API. The `HuobiClient`
 Examples can be found in the Examples folder.
 
 ## Release notes
+* Version 2.0.4 - 27 Jan 2020
+    * Updated CryptoExchange.Net
+
+* Version 2.0.3 - 01 Nov 2019
+    * Fixed websocket client authentication
+
+* Version 2.0.1 - 23 Oct 2019
+	* Fixed validation length symbols again
+	
+* Version 2.0.1 - 23 Oct 2019
+	* Fixed validation length symbols
+
+* Version 2.0.0 - 23 Oct 2019
+	* See CryptoExchange.Net 3.0 release notes
+	* Added input validation
+	* Added CancellationToken support to all requests
+	* Now using IEnumerable<> for collections
+	* Renamed Market -> Symbol
+	* Renamed MarketDepth -> OrderBook
+	* Renamed QueryXXX -> GetXXX
+
+* Version 1.1.9 - 11 Sep 2019
+    * Updated CryptoExchange.Net
+
 * Version 1.1.8 - 07 Aug 2019
     * Updated CryptoExchange.Net
 
