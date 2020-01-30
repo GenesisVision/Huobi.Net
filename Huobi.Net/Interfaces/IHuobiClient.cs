@@ -216,6 +216,10 @@ namespace Huobi.Net.Interfaces
         /// <returns></returns>
         Task<WebCallResult<IEnumerable<HuobiBalance>>> GetBalancesAsync(long accountId, CancellationToken ct = default);
 
+        WebCallResult<IEnumerable<HuobiAccountHistory>> GetAccountHistory(long accountId, string? currency = null, string? transactTypes = null, DateTime? startTime = null, DateTime? endTime = null, string? sort = null, int? size = null, CancellationToken ct = default);
+
+        Task<WebCallResult<IEnumerable<HuobiAccountHistory>>> GetAccountHistoryAsync(long accountId, string? currency = null, string? transactTypes = null, DateTime? startTime = null, DateTime? endTime = null, string? sort = null, int? size = null, CancellationToken ct = default);
+
         /// <summary>
         /// Gets a list of balances for a specific sub account
         /// </summary>

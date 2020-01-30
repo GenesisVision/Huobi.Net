@@ -42,6 +42,7 @@ namespace Huobi.Net
 
         private const string GetAccountsEndpoint = "account/accounts";
         private const string GetBalancesEndpoint = "account/accounts/{}/balance";
+        private const string GetAccountHistoryEndpoint = "account/history";
 
         private const string GetSubAccountBalancesEndpoint = "account/accounts/{}";
         private const string TransferWithSubAccountEndpoint = "subuser/transfer";
@@ -391,6 +392,28 @@ namespace Huobi.Net
             return new WebCallResult<IEnumerable<HuobiBalance>>(result.ResponseStatusCode, result.ResponseHeaders, result.Data.Data, result.Error);
         }
 
+        public WebCallResult<IEnumerable<HuobiAccountHistory>> GetAccountHistory(long accountId, string? currency = null, string? transactTypes = null, DateTime? startTime = null, DateTime? endTime = null, string? sort = null, int? size = null, CancellationToken ct = default) => GetAccountHistoryAsync(accountId, currency, transactTypes, startTime, endTime, sort, size, ct).Result;
+
+        public async Task<WebCallResult<IEnumerable<HuobiAccountHistory>>> GetAccountHistoryAsync(long accountId, string? currency = null, string? transactTypes = null, DateTime? startTime = null, DateTime? endTime = null, string? sort = null, int? size = null, CancellationToken ct = default)
+        {
+            var parameters = new Dictionary<string, object>
+                             {
+                                 {"account-id", accountId},
+                             };
+            parameters.AddOptionalParameter("currency", currency);
+            parameters.AddOptionalParameter("transact-types", transactTypes);
+            parameters.AddOptionalParameter("start-time", startTime == null ? null : ToUnixTimestamp(startTime.Value).ToString());
+            parameters.AddOptionalParameter("end-time", endTime == null ? null : ToUnixTimestamp(endTime.Value).ToString());
+            parameters.AddOptionalParameter("sort", sort);
+            parameters.AddOptionalParameter("size", size);
+            
+            var result = await SendHuobiRequest<IEnumerable<HuobiAccountHistory>>(GetUrl(GetAccountHistoryEndpoint, "1"), HttpMethod.Get, ct, parameters, signed: true).ConfigureAwait(false);
+            if (!result)
+                return WebCallResult<IEnumerable<HuobiAccountHistory>>.CreateErrorResult(result.ResponseStatusCode, result.ResponseHeaders, result.Error!);
+            
+            return new WebCallResult<IEnumerable<HuobiAccountHistory>>(result.ResponseStatusCode, result.ResponseHeaders, result.Data, result.Error);
+        }
+        
         /// <summary>
         /// Gets a list of balances for a specific sub account
         /// </summary>
