@@ -191,14 +191,14 @@ namespace Huobi.Net.Interfaces
         /// </summary>
         /// <param name="ct">Cancellation token</param>
         /// <returns></returns>
-        WebCallResult<IEnumerable<HuobiAccountBalances>> GetAccounts(CancellationToken ct = default);
+        WebCallResult<IEnumerable<HuobiAccount>> GetAccounts(CancellationToken ct = default);
 
         /// <summary>
         /// Gets a list of accounts associated with the apikey/secret
         /// </summary>
         /// <param name="ct">Cancellation token</param>
         /// <returns></returns>
-        Task<WebCallResult<IEnumerable<HuobiAccountBalances>>> GetAccountsAsync(CancellationToken ct = default);
+        Task<WebCallResult<IEnumerable<HuobiAccount>>> GetAccountsAsync(CancellationToken ct = default);
 
         /// <summary>
         /// Gets a list of balances for a specific account
@@ -216,10 +216,34 @@ namespace Huobi.Net.Interfaces
         /// <returns></returns>
         Task<WebCallResult<IEnumerable<HuobiBalance>>> GetBalancesAsync(long accountId, CancellationToken ct = default);
 
-        WebCallResult<IEnumerable<HuobiAccountHistory>> GetAccountHistory(long accountId, string? currency = null, string? transactTypes = null, DateTime? startTime = null, DateTime? endTime = null, string? sort = null, int? size = null, CancellationToken ct = default);
-
-        Task<WebCallResult<IEnumerable<HuobiAccountHistory>>> GetAccountHistoryAsync(long accountId, string? currency = null, string? transactTypes = null, DateTime? startTime = null, DateTime? endTime = null, string? sort = null, int? size = null, CancellationToken ct = default);
-
+        /// <summary>
+        /// Gets a list of amount changes of specified user's account
+        /// </summary>
+        /// <param name="accountId">The id of the account to get the balances for</param>
+        /// <param name="currency">Currency name</param>
+        /// <param name="transactionTypes">Amount change types</param>
+        /// <param name="startTime">Far point of time of the query window. The maximum size of the query window is 1 hour. The query window can be shifted within 30 days</param>
+        /// <param name="endTime">Near point of time of the query window. The maximum size of the query window is 1 hour. The query window can be shifted within 30 days</param>
+        /// <param name="sort">Sorting order (Ascending by default)</param>
+        /// <param name="size">Maximum number of items in each response (from 1 to 500, default is 100)</param>
+        /// <param name="ct">Cancellation token</param>
+        /// <returns></returns>
+        WebCallResult<IEnumerable<HuobiAccountHistory>> GetAccountHistory(long accountId, string? currency = null, IEnumerable<HuobiTransactionType>? transactionTypes = null, DateTime? startTime = null, DateTime? endTime = null, HuobiSortingType? sort = null, int? size = null, CancellationToken ct = default);
+        
+        /// <summary>
+        /// Gets a list of amount changes of specified user's account
+        /// </summary>
+        /// <param name="accountId">The id of the account to get the balances for</param>
+        /// <param name="currency">Currency name</param>
+        /// <param name="transactionTypes">Amount change types</param>
+        /// <param name="startTime">Far point of time of the query window. The maximum size of the query window is 1 hour. The query window can be shifted within 30 days</param>
+        /// <param name="endTime">Near point of time of the query window. The maximum size of the query window is 1 hour. The query window can be shifted within 30 days</param>
+        /// <param name="sort">Sorting order (Ascending by default)</param>
+        /// <param name="size">Maximum number of items in each response (from 1 to 500, default is 100)</param>
+        /// <param name="ct">Cancellation token</param>
+        /// <returns></returns>
+        Task<WebCallResult<IEnumerable<HuobiAccountHistory>>> GetAccountHistoryAsync(long accountId, string? currency = null, IEnumerable<HuobiTransactionType>? transactionTypes = null, DateTime? startTime = null, DateTime? endTime = null, HuobiSortingType? sort = null, int? size = null, CancellationToken ct = default);
+        
         /// <summary>
         /// Gets a list of balances for a specific sub account
         /// </summary>
@@ -266,9 +290,10 @@ namespace Huobi.Net.Interfaces
         /// <param name="orderType">The type of the order</param>
         /// <param name="amount">The amount of the order</param>
         /// <param name="price">The price of the order. Should be omitted for market orders</param>
+        /// <param name="clientOrderId">The clientOrderId the order should get</param>
         /// <param name="ct">Cancellation token</param>
         /// <returns></returns>
-        WebCallResult<long> PlaceOrder(long accountId, string symbol, HuobiOrderType orderType, decimal amount, decimal? price = null, CancellationToken ct = default);
+        WebCallResult<long> PlaceOrder(long accountId, string symbol, HuobiOrderType orderType, decimal amount, decimal? price = null, string? clientOrderId = null, CancellationToken ct = default);
 
         /// <summary>
         /// Places an order
@@ -278,9 +303,10 @@ namespace Huobi.Net.Interfaces
         /// <param name="orderType">The type of the order</param>
         /// <param name="amount">The amount of the order</param>
         /// <param name="price">The price of the order. Should be omitted for market orders</param>
+        /// <param name="clientOrderId">The clientOrderId the order should get</param>
         /// <param name="ct">Cancellation token</param>
         /// <returns></returns>
-        Task<WebCallResult<long>> PlaceOrderAsync(long accountId, string symbol, HuobiOrderType orderType, decimal amount, decimal? price = null, CancellationToken ct = default);
+        Task<WebCallResult<long>> PlaceOrderAsync(long accountId, string symbol, HuobiOrderType orderType, decimal amount, decimal? price = null, string? clientOrderId = null, CancellationToken ct = default);
 
         /// <summary>
         /// Gets a list of open orders
@@ -321,20 +347,38 @@ namespace Huobi.Net.Interfaces
         Task<WebCallResult<long>> CancelOrderAsync(long orderId, CancellationToken ct = default);
 
         /// <summary>
-        /// Cancel multiple open orders
+        /// Cancels an open order
         /// </summary>
-        /// <param name="orderIds">The ids of the orders to cancel</param>
+        /// <param name="clientOrderId">The client id of the order to cancel</param>
         /// <param name="ct">Cancellation token</param>
         /// <returns></returns>
-        WebCallResult<HuobiBatchCancelResult> CancelOrders(IEnumerable<long> orderIds, CancellationToken ct = default);
+        WebCallResult<long> CancelOrderByClientOrderId(string clientOrderId, CancellationToken ct = default);
+
+        /// <summary>
+        /// Cancels an open order
+        /// </summary>
+        /// <param name="clientOrderId">The client id of the order to cancel</param>
+        /// <param name="ct">Cancellation token</param>
+        /// <returns></returns>
+        Task<WebCallResult<long>> CancelOrderByClientOrderIdAsync(string clientOrderId, CancellationToken ct = default);
 
         /// <summary>
         /// Cancel multiple open orders
         /// </summary>
         /// <param name="orderIds">The ids of the orders to cancel</param>
+        /// <param name="clientOrderIds">The client ids of the orders to cancel</param>
         /// <param name="ct">Cancellation token</param>
         /// <returns></returns>
-        Task<WebCallResult<HuobiBatchCancelResult>> CancelOrdersAsync(IEnumerable<long> orderIds, CancellationToken ct = default);
+        WebCallResult<HuobiBatchCancelResult> CancelOrders(IEnumerable<long>? orderIds = null, IEnumerable<string>? clientOrderIds = null, CancellationToken ct = default);
+
+        /// <summary>
+        /// Cancel multiple open orders
+        /// </summary>
+        /// <param name="orderIds">The ids of the orders to cancel</param>
+        /// <param name="clientOrderIds">The client ids of the orders to cancel</param>
+        /// <param name="ct">Cancellation token</param>
+        /// <returns></returns>
+        Task<WebCallResult<HuobiBatchCancelResult>> CancelOrdersAsync(IEnumerable<long>? orderIds = null, IEnumerable<string>? clientOrderIds = null, CancellationToken ct = default);
 
         /// <summary>
         /// Get details of an order
@@ -351,6 +395,22 @@ namespace Huobi.Net.Interfaces
         /// <param name="ct">Cancellation token</param>
         /// <returns></returns>
         Task<WebCallResult<HuobiOrder>> GetOrderInfoAsync(long orderId, CancellationToken ct = default);
+
+        /// <summary>
+        /// Get details of an order
+        /// </summary>
+        /// <param name="clientOrderId">The client id of the order to retrieve</param>
+        /// <param name="ct">Cancellation token</param>
+        /// <returns></returns>
+        WebCallResult<HuobiOrder> GetOrderInfoByClientOrderId(string clientOrderId, CancellationToken ct = default);
+
+        /// <summary>
+        /// Get details of an order
+        /// </summary>
+        /// <param name="clientOrderId">The client id of the order to retrieve</param>
+        /// <param name="ct">Cancellation token</param>
+        /// <returns></returns>
+        Task<WebCallResult<HuobiOrder>> GetOrderInfoByClientOrderIdAsync(string clientOrderId, CancellationToken ct = default);
 
         /// <summary>
         /// Gets a list of trades made for a specific order

@@ -228,6 +228,34 @@
             <param name="ct">Cancellation token</param>
             <returns></returns>
         </member>
+        <member name="M:Huobi.Net.HuobiClient.GetAccountHistory(System.Int64,System.String,System.Collections.Generic.IEnumerable{Huobi.Net.Objects.HuobiTransactionType},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{Huobi.Net.Objects.HuobiSortingType},System.Nullable{System.Int32},System.Threading.CancellationToken)">
+            <summary>
+            Gets a list of amount changes of specified user's account
+            </summary>
+            <param name="accountId">The id of the account to get the balances for</param>
+            <param name="currency">Currency name</param>
+            <param name="transactionTypes">Amount change types</param>
+            <param name="startTime">Far point of time of the query window. The maximum size of the query window is 1 hour. The query window can be shifted within 30 days</param>
+            <param name="endTime">Near point of time of the query window. The maximum size of the query window is 1 hour. The query window can be shifted within 30 days</param>
+            <param name="sort">Sorting order (Ascending by default)</param>
+            <param name="size">Maximum number of items in each response (from 1 to 500, default is 100)</param>
+            <param name="ct">Cancellation token</param>
+            <returns></returns>
+        </member>
+        <member name="M:Huobi.Net.HuobiClient.GetAccountHistoryAsync(System.Int64,System.String,System.Collections.Generic.IEnumerable{Huobi.Net.Objects.HuobiTransactionType},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{Huobi.Net.Objects.HuobiSortingType},System.Nullable{System.Int32},System.Threading.CancellationToken)">
+            <summary>
+            Gets a list of amount changes of specified user's account
+            </summary>
+            <param name="accountId">The id of the account to get the balances for</param>
+            <param name="currency">Currency name</param>
+            <param name="transactionTypes">Amount change types</param>
+            <param name="startTime">Far point of time of the query window. The maximum size of the query window is 1 hour. The query window can be shifted within 30 days</param>
+            <param name="endTime">Near point of time of the query window. The maximum size of the query window is 1 hour. The query window can be shifted within 30 days</param>
+            <param name="sort">Sorting order (Ascending by default)</param>
+            <param name="size">Maximum number of items in each response (from 1 to 500, default is 100)</param>
+            <param name="ct">Cancellation token</param>
+            <returns></returns>
+        </member>
         <member name="M:Huobi.Net.HuobiClient.GetSubAccountBalances(System.Int64,System.Threading.CancellationToken)">
             <summary>
             Gets a list of balances for a specific sub account
@@ -266,7 +294,7 @@
             <param name="ct">Cancellation token</param>
             <returns>Unique transfer id</returns>
         </member>
-        <member name="M:Huobi.Net.HuobiClient.PlaceOrder(System.Int64,System.String,Huobi.Net.Objects.HuobiOrderType,System.Decimal,System.Nullable{System.Decimal},System.Threading.CancellationToken)">
+        <member name="M:Huobi.Net.HuobiClient.PlaceOrder(System.Int64,System.String,Huobi.Net.Objects.HuobiOrderType,System.Decimal,System.Nullable{System.Decimal},System.String,System.Threading.CancellationToken)">
             <summary>
             Places an order
             </summary>
@@ -275,10 +303,11 @@
             <param name="orderType">The type of the order</param>
             <param name="amount">The amount of the order</param>
             <param name="price">The price of the order. Should be omitted for market orders</param>
+            <param name="clientOrderId">The clientOrderId the order should get</param>
             <param name="ct">Cancellation token</param>
             <returns></returns>
         </member>
-        <member name="M:Huobi.Net.HuobiClient.PlaceOrderAsync(System.Int64,System.String,Huobi.Net.Objects.HuobiOrderType,System.Decimal,System.Nullable{System.Decimal},System.Threading.CancellationToken)">
+        <member name="M:Huobi.Net.HuobiClient.PlaceOrderAsync(System.Int64,System.String,Huobi.Net.Objects.HuobiOrderType,System.Decimal,System.Nullable{System.Decimal},System.String,System.Threading.CancellationToken)">
             <summary>
             Places an order
             </summary>
@@ -287,6 +316,7 @@
             <param name="orderType">The type of the order</param>
             <param name="amount">The amount of the order</param>
             <param name="price">The price of the order. Should be omitted for market orders</param>
+            <param name="clientOrderId">The clientOrderId the order should get</param>
             <param name="ct">Cancellation token</param>
             <returns></returns>
         </member>
@@ -328,19 +358,37 @@
             <param name="ct">Cancellation token</param>
             <returns></returns>
         </member>
-        <member name="M:Huobi.Net.HuobiClient.CancelOrders(System.Collections.Generic.IEnumerable{System.Int64},System.Threading.CancellationToken)">
+        <member name="M:Huobi.Net.HuobiClient.CancelOrderByClientOrderId(System.String,System.Threading.CancellationToken)">
             <summary>
-            Cancel multiple open orders
+            Cancels an open order
             </summary>
-            <param name="orderIds">The ids of the orders to cancel</param>
+            <param name="clientOrderId">The client id of the order to cancel</param>
             <param name="ct">Cancellation token</param>
             <returns></returns>
         </member>
-        <member name="M:Huobi.Net.HuobiClient.CancelOrdersAsync(System.Collections.Generic.IEnumerable{System.Int64},System.Threading.CancellationToken)">
+        <member name="M:Huobi.Net.HuobiClient.CancelOrderByClientOrderIdAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Cancels an open order
+            </summary>
+            <param name="clientOrderId">The client id of the order to cancel</param>
+            <param name="ct">Cancellation token</param>
+            <returns></returns>
+        </member>
+        <member name="M:Huobi.Net.HuobiClient.CancelOrders(System.Collections.Generic.IEnumerable{System.Int64},System.Collections.Generic.IEnumerable{System.String},System.Threading.CancellationToken)">
             <summary>
             Cancel multiple open orders
             </summary>
             <param name="orderIds">The ids of the orders to cancel</param>
+            <param name="clientOrderIds">The client ids of the orders to cancel</param>
+            <param name="ct">Cancellation token</param>
+            <returns></returns>
+        </member>
+        <member name="M:Huobi.Net.HuobiClient.CancelOrdersAsync(System.Collections.Generic.IEnumerable{System.Int64},System.Collections.Generic.IEnumerable{System.String},System.Threading.CancellationToken)">
+            <summary>
+            Cancel multiple open orders
+            </summary>
+            <param name="orderIds">The ids of the orders to cancel</param>
+            <param name="clientOrderIds">The client ids of the orders to cancel</param>
             <param name="ct">Cancellation token</param>
             <returns></returns>
         </member>
@@ -357,6 +405,22 @@
             Get details of an order
             </summary>
             <param name="orderId">The id of the order to retrieve</param>
+            <param name="ct">Cancellation token</param>
+            <returns></returns>
+        </member>
+        <member name="M:Huobi.Net.HuobiClient.GetOrderInfoByClientOrderId(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Get details of an order by client order id
+            </summary>
+            <param name="clientOrderId">The client id of the order to retrieve</param>
+            <param name="ct">Cancellation token</param>
+            <returns></returns>
+        </member>
+        <member name="M:Huobi.Net.HuobiClient.GetOrderInfoByClientOrderIdAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Get details of an order by client order id
+            </summary>
+            <param name="clientOrderId">The client id of the order to retrieve</param>
             <param name="ct">Cancellation token</param>
             <returns></returns>
         </member>
@@ -1076,6 +1140,34 @@
             <param name="ct">Cancellation token</param>
             <returns></returns>
         </member>
+        <member name="M:Huobi.Net.Interfaces.IHuobiClient.GetAccountHistory(System.Int64,System.String,System.Collections.Generic.IEnumerable{Huobi.Net.Objects.HuobiTransactionType},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{Huobi.Net.Objects.HuobiSortingType},System.Nullable{System.Int32},System.Threading.CancellationToken)">
+            <summary>
+            Gets a list of amount changes of specified user's account
+            </summary>
+            <param name="accountId">The id of the account to get the balances for</param>
+            <param name="currency">Currency name</param>
+            <param name="transactionTypes">Amount change types</param>
+            <param name="startTime">Far point of time of the query window. The maximum size of the query window is 1 hour. The query window can be shifted within 30 days</param>
+            <param name="endTime">Near point of time of the query window. The maximum size of the query window is 1 hour. The query window can be shifted within 30 days</param>
+            <param name="sort">Sorting order (Ascending by default)</param>
+            <param name="size">Maximum number of items in each response (from 1 to 500, default is 100)</param>
+            <param name="ct">Cancellation token</param>
+            <returns></returns>
+        </member>
+        <member name="M:Huobi.Net.Interfaces.IHuobiClient.GetAccountHistoryAsync(System.Int64,System.String,System.Collections.Generic.IEnumerable{Huobi.Net.Objects.HuobiTransactionType},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{Huobi.Net.Objects.HuobiSortingType},System.Nullable{System.Int32},System.Threading.CancellationToken)">
+            <summary>
+            Gets a list of amount changes of specified user's account
+            </summary>
+            <param name="accountId">The id of the account to get the balances for</param>
+            <param name="currency">Currency name</param>
+            <param name="transactionTypes">Amount change types</param>
+            <param name="startTime">Far point of time of the query window. The maximum size of the query window is 1 hour. The query window can be shifted within 30 days</param>
+            <param name="endTime">Near point of time of the query window. The maximum size of the query window is 1 hour. The query window can be shifted within 30 days</param>
+            <param name="sort">Sorting order (Ascending by default)</param>
+            <param name="size">Maximum number of items in each response (from 1 to 500, default is 100)</param>
+            <param name="ct">Cancellation token</param>
+            <returns></returns>
+        </member>
         <member name="M:Huobi.Net.Interfaces.IHuobiClient.GetSubAccountBalances(System.Int64,System.Threading.CancellationToken)">
             <summary>
             Gets a list of balances for a specific sub account
@@ -1114,7 +1206,7 @@
             <param name="ct">Cancellation token</param>
             <returns>Unique transfer id</returns>
         </member>
-        <member name="M:Huobi.Net.Interfaces.IHuobiClient.PlaceOrder(System.Int64,System.String,Huobi.Net.Objects.HuobiOrderType,System.Decimal,System.Nullable{System.Decimal},System.Threading.CancellationToken)">
+        <member name="M:Huobi.Net.Interfaces.IHuobiClient.PlaceOrder(System.Int64,System.String,Huobi.Net.Objects.HuobiOrderType,System.Decimal,System.Nullable{System.Decimal},System.String,System.Threading.CancellationToken)">
             <summary>
             Places an order
             </summary>
@@ -1123,10 +1215,11 @@
             <param name="orderType">The type of the order</param>
             <param name="amount">The amount of the order</param>
             <param name="price">The price of the order. Should be omitted for market orders</param>
+            <param name="clientOrderId">The clientOrderId the order should get</param>
             <param name="ct">Cancellation token</param>
             <returns></returns>
         </member>
-        <member name="M:Huobi.Net.Interfaces.IHuobiClient.PlaceOrderAsync(System.Int64,System.String,Huobi.Net.Objects.HuobiOrderType,System.Decimal,System.Nullable{System.Decimal},System.Threading.CancellationToken)">
+        <member name="M:Huobi.Net.Interfaces.IHuobiClient.PlaceOrderAsync(System.Int64,System.String,Huobi.Net.Objects.HuobiOrderType,System.Decimal,System.Nullable{System.Decimal},System.String,System.Threading.CancellationToken)">
             <summary>
             Places an order
             </summary>
@@ -1135,6 +1228,7 @@
             <param name="orderType">The type of the order</param>
             <param name="amount">The amount of the order</param>
             <param name="price">The price of the order. Should be omitted for market orders</param>
+            <param name="clientOrderId">The clientOrderId the order should get</param>
             <param name="ct">Cancellation token</param>
             <returns></returns>
         </member>
@@ -1176,19 +1270,37 @@
             <param name="ct">Cancellation token</param>
             <returns></returns>
         </member>
-        <member name="M:Huobi.Net.Interfaces.IHuobiClient.CancelOrders(System.Collections.Generic.IEnumerable{System.Int64},System.Threading.CancellationToken)">
+        <member name="M:Huobi.Net.Interfaces.IHuobiClient.CancelOrderByClientOrderId(System.String,System.Threading.CancellationToken)">
             <summary>
-            Cancel multiple open orders
+            Cancels an open order
             </summary>
-            <param name="orderIds">The ids of the orders to cancel</param>
+            <param name="clientOrderId">The client id of the order to cancel</param>
             <param name="ct">Cancellation token</param>
             <returns></returns>
         </member>
-        <member name="M:Huobi.Net.Interfaces.IHuobiClient.CancelOrdersAsync(System.Collections.Generic.IEnumerable{System.Int64},System.Threading.CancellationToken)">
+        <member name="M:Huobi.Net.Interfaces.IHuobiClient.CancelOrderByClientOrderIdAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Cancels an open order
+            </summary>
+            <param name="clientOrderId">The client id of the order to cancel</param>
+            <param name="ct">Cancellation token</param>
+            <returns></returns>
+        </member>
+        <member name="M:Huobi.Net.Interfaces.IHuobiClient.CancelOrders(System.Collections.Generic.IEnumerable{System.Int64},System.Collections.Generic.IEnumerable{System.String},System.Threading.CancellationToken)">
             <summary>
             Cancel multiple open orders
             </summary>
             <param name="orderIds">The ids of the orders to cancel</param>
+            <param name="clientOrderIds">The client ids of the orders to cancel</param>
+            <param name="ct">Cancellation token</param>
+            <returns></returns>
+        </member>
+        <member name="M:Huobi.Net.Interfaces.IHuobiClient.CancelOrdersAsync(System.Collections.Generic.IEnumerable{System.Int64},System.Collections.Generic.IEnumerable{System.String},System.Threading.CancellationToken)">
+            <summary>
+            Cancel multiple open orders
+            </summary>
+            <param name="orderIds">The ids of the orders to cancel</param>
+            <param name="clientOrderIds">The client ids of the orders to cancel</param>
             <param name="ct">Cancellation token</param>
             <returns></returns>
         </member>
@@ -1205,6 +1317,22 @@
             Get details of an order
             </summary>
             <param name="orderId">The id of the order to retrieve</param>
+            <param name="ct">Cancellation token</param>
+            <returns></returns>
+        </member>
+        <member name="M:Huobi.Net.Interfaces.IHuobiClient.GetOrderInfoByClientOrderId(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Get details of an order
+            </summary>
+            <param name="clientOrderId">The client id of the order to retrieve</param>
+            <param name="ct">Cancellation token</param>
+            <returns></returns>
+        </member>
+        <member name="M:Huobi.Net.Interfaces.IHuobiClient.GetOrderInfoByClientOrderIdAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Get details of an order
+            </summary>
+            <param name="clientOrderId">The client id of the order to retrieve</param>
             <param name="ct">Cancellation token</param>
             <returns></returns>
         </member>
@@ -1581,6 +1709,51 @@
         <member name="P:Huobi.Net.Objects.HuobiAccountBalances.Data">
             <summary>
             The list of balances
+            </summary>
+        </member>
+        <member name="T:Huobi.Net.Objects.HuobiAccountHistory">
+            <summary>
+            Account history data
+            </summary>
+        </member>
+        <member name="P:Huobi.Net.Objects.HuobiAccountHistory.AccountId">
+            <summary>
+            Account ID
+            </summary>
+        </member>
+        <member name="P:Huobi.Net.Objects.HuobiAccountHistory.Currency">
+            <summary>
+            Currency
+            </summary>
+        </member>
+        <member name="P:Huobi.Net.Objects.HuobiAccountHistory.Amount">
+            <summary>
+            Amount change (positive value if income, negative value if outcome)	
+            </summary>
+        </member>
+        <member name="P:Huobi.Net.Objects.HuobiAccountHistory.Type">
+            <summary>
+            Amount change types
+            </summary>
+        </member>
+        <member name="P:Huobi.Net.Objects.HuobiAccountHistory.AvailableBalance">
+            <summary>
+            Available balance
+            </summary>
+        </member>
+        <member name="P:Huobi.Net.Objects.HuobiAccountHistory.AccountBalance">
+            <summary>
+            Account balance
+            </summary>
+        </member>
+        <member name="P:Huobi.Net.Objects.HuobiAccountHistory.Time">
+            <summary>
+            Transaction time (database time)
+            </summary>
+        </member>
+        <member name="P:Huobi.Net.Objects.HuobiAccountHistory.RecordId">
+            <summary>
+            Unique record ID in the database
             </summary>
         </member>
         <member name="T:Huobi.Net.Objects.HuobiBalance">
@@ -2003,6 +2176,86 @@
             Suspended
             </summary>
         </member>
+        <member name="T:Huobi.Net.Objects.HuobiTransactionType">
+            <summary>
+            Transaction type
+            </summary>
+        </member>
+        <member name="F:Huobi.Net.Objects.HuobiTransactionType.Trade">
+            <summary>
+            Trade
+            </summary>
+        </member>
+        <member name="F:Huobi.Net.Objects.HuobiTransactionType.Etf">
+            <summary>
+            ETF
+            </summary>
+        </member>
+        <member name="F:Huobi.Net.Objects.HuobiTransactionType.TransactionFee">
+            <summary>
+            Transaction fee
+            </summary>
+        </member>
+        <member name="F:Huobi.Net.Objects.HuobiTransactionType.Deduction">
+            <summary>
+            Deduction
+            </summary>
+        </member>
+        <member name="F:Huobi.Net.Objects.HuobiTransactionType.Transfer">
+            <summary>
+            Transfer between accounts
+            </summary>
+        </member>
+        <member name="F:Huobi.Net.Objects.HuobiTransactionType.Credit">
+            <summary>
+            Credit
+            </summary>
+        </member>
+        <member name="F:Huobi.Net.Objects.HuobiTransactionType.Liquidation">
+            <summary>
+            Liquidation
+            </summary>
+        </member>
+        <member name="F:Huobi.Net.Objects.HuobiTransactionType.Interest">
+            <summary>
+            Interest
+            </summary>
+        </member>
+        <member name="F:Huobi.Net.Objects.HuobiTransactionType.DepositWithdraw">
+            <summary>
+            Deposit or withdraw
+            </summary>
+        </member>
+        <member name="F:Huobi.Net.Objects.HuobiTransactionType.WithdrawFee">
+            <summary>
+            Withdraw fee
+            </summary>
+        </member>
+        <member name="F:Huobi.Net.Objects.HuobiTransactionType.Exchange">
+            <summary>
+            Exchange
+            </summary>
+        </member>
+        <member name="F:Huobi.Net.Objects.HuobiTransactionType.Other">
+            <summary>
+            Other types
+            </summary>
+        </member>
+        <member name="T:Huobi.Net.Objects.HuobiSortingType">
+            <summary>
+            Sorting order
+            </summary>
+        </member>
+        <member name="F:Huobi.Net.Objects.HuobiSortingType.Ascending">
+            <summary>
+            Ascending
+            </summary>
+        </member>
+        <member name="F:Huobi.Net.Objects.HuobiSortingType.Descending">
+            <summary>
+            Descending
+            </summary>
+        </member>
         <member name="T:Huobi.Net.Objects.HuobiOpenOrder">
             <summary>
             Open order
@@ -2011,6 +2264,11 @@
         <member name="P:Huobi.Net.Objects.HuobiOpenOrder.Id">
             <summary>
             The id of the order
+            </summary>
+        </member>
+        <member name="P:Huobi.Net.Objects.HuobiOpenOrder.ClientOrderId">
+            <summary>
+            The order id as specified by the client
             </summary>
         </member>
         <member name="P:Huobi.Net.Objects.HuobiOpenOrder.Symbol">
@@ -2086,6 +2344,11 @@
         <member name="P:Huobi.Net.Objects.HuobiOrder.Id">
             <summary>
             The id of the order
+            </summary>
+        </member>
+        <member name="P:Huobi.Net.Objects.HuobiOrder.ClientOrderId">
+            <summary>
+            The order id as specified by the client
             </summary>
         </member>
         <member name="P:Huobi.Net.Objects.HuobiOrder.Symbol">
