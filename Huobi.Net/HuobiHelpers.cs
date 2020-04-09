@@ -3,6 +3,9 @@ using System.Text.RegularExpressions;
 
 namespace Huobi.Net
 {
+    /// <summary>
+    /// Helpers
+    /// </summary>
     public static class HuobiHelpers
     {
         /// <summary>

@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -493,7 +494,14 @@ namespace Huobi.Net
                 { "type", JsonConvert.SerializeObject(transferType, new TransferTypeConverter(false)) }
             };
 
-            return await SendHuobiRequest<long>(GetUrl(TransferWithSubAccountEndpoint, "1"), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
+            var res = await SendHuobiRequest<long?>(GetUrl(TransferWithSubAccountEndpoint, "1"), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
+            if (res.Data == null) // TODO better solution
+                return new WebCallResult<long>(null, null, -1, new UnknownError
+                                                               {
+                                                                   Message = "Failed to transfer, probably not enough balance"
+                                                               });
+            
+            return new WebCallResult<long>(res.ResponseStatusCode, res.ResponseHeaders, res.Data.Value, res.Error);
         }
 
         /// <summary>
