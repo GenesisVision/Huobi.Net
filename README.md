@@ -53,6 +53,11 @@ Implementations from third parties:
 <br />
 <a href="https://github.com/burakoner/OKEx.Net">OKEx</a>
 </td>
+	</td>
+	<td><a href="https://github.com/ridicoulous/Bitmex.Net"><img src="https://github.com/ridicoulous/Bitmex.Net/blob/master/Bitmex.Net/Icon/icon.png"></a>
+<br />
+<a href="https://github.com/ridicoulous/Bitmex.Net">Bitmex</a>
+</td>
 </tr>
 </table>
 
@@ -66,7 +71,8 @@ Donations are greatly appreciated and a motivation to keep improving.
 
 
 ## Installation
-![Nuget version](https://img.shields.io/nuget/v/Huobi.net.svg)  ![Nuget downloads](https://img.shields.io/nuget/dt/Huobi.Net.svg)
+[![Nuget](https://img.shields.io/nuget/v/Huobi.Net)](https://www.nuget.org/packages/Huobi.Net/)
+[![Nuget](https://img.shields.io/nuget/dt/Huobi.Net)](https://www.nuget.org/packages/Huobi.Net/)
 Available on [Nuget](https://www.nuget.org/packages/Huobi.Net/).
 ```
 pm> Install-Package Huobi.Net
@@ -89,6 +95,31 @@ Huobi.Net provides two clients to interact with the Huobi API. The `HuobiClient`
 Examples can be found in the Examples folder.
 
 ## Release notes
+* Version 2.0.12 - 12 Aug 2020
+    * Updated CryptoExchange.Net
+
+* Version 2.0.11 - 03 Aug 2020
+    * Added best offer stream
+
+* Version 2.0.10 - 20 Jul 2020
+    * Fixed transactionType mapping
+
+* Version 2.0.10 - 20 Jul 2020
+    * Fixed TransactionType mapping
+
+* Version 2.0.9 - 07 Jul 2020
+    * Fixed error parsing
+    * Updated ticker model
+
+* Version 2.0.8 - 21 Jun 2020
+    * Updated CryptoExchange
+
+* Version 2.0.7 - 16 Jun 2020
+    * Updated CryptoExchange.Net
+
+* Version 2.0.6 - 07 Jun 2020
+	* Updated CryptoExchange.Net to fix order book desync
+
 * Version 2.0.5 - 03 Mar 2020
     * Added clientOrderId to orders, added clientOrderId endpoints
 
