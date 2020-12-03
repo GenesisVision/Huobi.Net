@@ -58,6 +58,10 @@ Implementations from third parties:
 <br />
 <a href="https://github.com/ridicoulous/Bitmex.Net">Bitmex</a>
 </td>
+<td><a href="https://github.com/intelligences/HitBTC.Net"><img src="https://github.com/intelligences/HitBTC.Net/blob/master/src/HitBTC.Net/Icon/icon.png?raw=true"></a>
+<br />
+<a href="https://github.com/intelligences/HitBTC.Net">HitBTC</a>
+</td>
 </tr>
 </table>
 
@@ -95,6 +99,20 @@ Huobi.Net provides two clients to interact with the Huobi API. The `HuobiClient`
 Examples can be found in the Examples folder.
 
 ## Release notes
+* Version 2.1.0 - 25 nov 2020
+    * Updated account socket subscriptions to V2 API
+
+* Version 2.0.15 - 19 nov 2020
+    * Added some V2 asset endpoints
+    * Updated CryptoExchange.Net
+
+* Version 2.0.14 - 08 Oct 2020
+    * Added symbol properties
+    * Updated CryptoExchange.Net
+
+* Version 2.0.13 - 28 Aug 2020
+    * Updated CryptoExchange.Net
+
 * Version 2.0.12 - 12 Aug 2020
     * Updated CryptoExchange.Net
 

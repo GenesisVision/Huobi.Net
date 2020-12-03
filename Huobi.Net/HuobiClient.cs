@@ -36,12 +36,17 @@ namespace Huobi.Net
         private const string MarketLastTradeEndpoint = "market/trade";
         private const string MarketTradeHistoryEndpoint = "market/history/trade";
         private const string MarketDetailsEndpoint = "market/detail";
+        private const string NavEndpoint = "market/etp";
 
+        private const string MarketStatusEndpoint = "market-status";
         private const string CommonSymbolsEndpoint = "common/symbols";
         private const string CommonCurrenciesEndpoint = "common/currencys";
+        private const string CommonCurrenciesAndChainsEndpoint = "reference/currencies";
         private const string ServerTimeEndpoint = "common/timestamp";
 
         private const string GetAccountsEndpoint = "account/accounts";
+        private const string GetAssetValuationEndpoint = "account/asset-valuation";
+        private const string TransferAssetValuationEndpoint = "account/transfer";
         private const string GetBalancesEndpoint = "account/accounts/{}/balance";
         private const string GetAccountHistoryEndpoint = "account/history";
 
@@ -53,6 +58,7 @@ namespace Huobi.Net
         private const string OrdersEndpoint = "order/orders";
         private const string CancelOrderEndpoint = "order/orders/{}/submitcancel";
         private const string CancelOrderByClientOrderIdEndpoint = "order/orders/submitCancelClientOrder";
+        private const string CancelOrdersByCriteriaEndpoint = "order/orders/batchCancelOpenOrders";
         private const string CancelOrdersEndpoint = "order/orders/batchcancel";
         private const string OrderInfoEndpoint = "order/orders/{}";
         private const string ClientOrderInfoEndpoint = "order/orders/getClientOrder";
@@ -129,7 +135,7 @@ namespace Huobi.Net
         /// <param name="symbol">The symbol to get the ticker for</param>
         /// <param name="ct">Cancellation token</param>
         /// <returns></returns>
-        public WebCallResult<HuobiSymbolTickMerged> GetMergedTickers(string symbol, CancellationToken ct = default) => GetMergedTickersAsync(symbol, ct).Result;
+        public WebCallResult<HuobiSymbolTickMerged> GetMergedTicker(string symbol, CancellationToken ct = default) => GetMergedTickerAsync(symbol, ct).Result;
 
         /// <summary>
         /// Gets the ticker, including the best bid / best ask for a symbol
@@ -137,7 +143,7 @@ namespace Huobi.Net
         /// <param name="symbol">The symbol to get the ticker for</param>
         /// <param name="ct">Cancellation token</param>
         /// <returns></returns>
-        public async Task<WebCallResult<HuobiSymbolTickMerged>> GetMergedTickersAsync(string symbol, CancellationToken ct = default)
+        public async Task<WebCallResult<HuobiSymbolTickMerged>> GetMergedTickerAsync(string symbol, CancellationToken ct = default)
         {
             symbol = symbol.ValidateHuobiSymbol();
             var parameters = new Dictionary<string, object>
@@ -307,6 +313,50 @@ namespace Huobi.Net
         }
 
         /// <summary>
+        /// Gets real time NAV for ETP
+        /// </summary>
+        /// <param name="symbol">The symbol to get the data for</param>
+        /// <param name="ct">Cancellation token</param>
+        /// <returns></returns>
+        public WebCallResult<HuobiNav> GetNav(string symbol, CancellationToken ct = default) => GetNavAsync(symbol, ct).Result;
+        /// <summary>
+        /// Gets real time NAV for ETP
+        /// </summary>
+        /// <param name="symbol">The symbol to get the data for</param>
+        /// <param name="ct">Cancellation token</param>
+        /// <returns></returns>
+        public async Task<WebCallResult<HuobiNav>> GetNavAsync(string symbol, CancellationToken ct = default)
+        {
+            symbol = symbol.ValidateHuobiSymbol();
+            var parameters = new Dictionary<string, object>
+            {
+                { "symbol", symbol }
+            };
+
+            var result = await SendHuobiTimestampRequest<HuobiNav>(GetUrl(NavEndpoint), HttpMethod.Get, ct, parameters, checkResult: false).ConfigureAwait(false);
+            if (!result)
+                return WebCallResult<HuobiNav>.CreateErrorResult(result.ResponseStatusCode, result.ResponseHeaders, result.Error!);
+
+            return new WebCallResult<HuobiNav>(result.ResponseStatusCode, result.ResponseHeaders, result.Data.Item1, null);
+        }
+
+        /// <summary>
+        /// Gets the current market status
+        /// </summary>
+        /// <param name="ct">Cancellation token</param>
+        /// <returns></returns>
+        public WebCallResult<HuobiMarketStatus> GetMarketStatus(CancellationToken ct = default) => GetMarketStatusAsync(ct).Result;
+        /// <summary>
+        /// Gets the current market status
+        /// </summary>
+        /// <param name="ct">Cancellation token</param>
+        /// <returns></returns>
+        public async Task<WebCallResult<HuobiMarketStatus>> GetMarketStatusAsync(CancellationToken ct = default)
+        {
+            return await SendHuobiV2Request<HuobiMarketStatus>(GetUrl(MarketStatusEndpoint, "2"), HttpMethod.Get, ct).ConfigureAwait(false);
+        }
+
+        /// <summary>
         /// Gets a list of supported symbols
         /// </summary>
         /// <param name="ct">Cancellation token</param>
@@ -336,6 +386,26 @@ namespace Huobi.Net
         public async Task<WebCallResult<IEnumerable<string>>> GetCurrenciesAsync(CancellationToken ct = default)
         {
             return await SendHuobiRequest<IEnumerable<string>>(GetUrl(CommonCurrenciesEndpoint, "1"), HttpMethod.Get, ct).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Gets a list of supported currencies and chains
+        /// </summary>
+        /// <param name="currency">Filter by currency</param>
+        /// <param name="ct">Cancellation token</param>
+        /// <returns></returns>
+        public WebCallResult<IEnumerable<HuobiCurrencyInfo>> GetCurrenciesAndChains(string? currency = null, CancellationToken ct = default) => GetCurrenciesAndChainsAsync(currency, ct).Result;
+        /// <summary>
+        /// Gets a list of supported currencies and chains
+        /// </summary>
+        /// <param name="currency">Filter by currency</param>
+        /// <param name="ct">Cancellation token</param>
+        /// <returns></returns>
+        public async Task<WebCallResult<IEnumerable<HuobiCurrencyInfo>>> GetCurrenciesAndChainsAsync(string? currency = null, CancellationToken ct = default)
+        {
+            var parameters = new Dictionary<string, object>();
+            parameters.AddOptionalParameter("currency", currency);
+            return await SendHuobiV2Request<IEnumerable<HuobiCurrencyInfo>>(GetUrl(CommonCurrenciesAndChainsEndpoint, "2"), HttpMethod.Get, ct, parameters).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -397,6 +467,84 @@ namespace Huobi.Net
         }
         
         /// <summary>
+        /// Gets the valuation of all assets
+        /// </summary>
+        /// <param name="accountType">Type of account to valuate</param>
+        /// <param name="valuationCurrency">The currency to get the value in</param>
+        /// <param name="subUserId">The id of the sub user</param>
+        /// <param name="ct">Cancellation token</param>
+        /// <returns></returns>
+        public WebCallResult<HuobiAccountValuation> GetAssetValuation(HuobiAccountType accountType, string? valuationCurrency = null, long? subUserId = null, CancellationToken ct = default) => GetAssetValuationAsync(accountType, valuationCurrency, subUserId, ct).Result;
+        /// <summary>
+        /// Gets the valuation of all assets
+        /// </summary>
+        /// <param name="accountType">Type of account to valuate</param>
+        /// <param name="valuationCurrency">The currency to get the value in</param>
+        /// <param name="subUserId">The id of the sub user</param>
+        /// <param name="ct">Cancellation token</param>
+        /// <returns></returns>
+        public async Task<WebCallResult<HuobiAccountValuation>> GetAssetValuationAsync(HuobiAccountType accountType, string? valuationCurrency = null, long? subUserId = null, CancellationToken ct = default)
+        {
+            var parameters = new Dictionary<string, object>()
+            {
+                { "accountType", JsonConvert.SerializeObject(accountType, new AccountTypeConverter(false))}
+            };
+            parameters.AddOptionalParameter("valuationCurrency", valuationCurrency);
+            parameters.AddOptionalParameter("subUid", subUserId);
+
+            return await SendHuobiV2Request<HuobiAccountValuation>(GetUrl(GetAssetValuationEndpoint, "2"), HttpMethod.Get, ct, parameters, signed: true).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Transfer assets between accounts
+        /// </summary>
+        /// <param name="fromUserId">From user id</param>
+        /// <param name="fromAccountType">From account type</param>
+        /// <param name="fromAccountId">From account id</param>
+        /// <param name="toUserId">To user id</param>
+        /// <param name="toAccountType">To account type</param>
+        /// <param name="toAccountId">To account id</param>
+        /// <param name="currency">Currency to transfer</param>
+        /// <param name="amount">Amount to transfer</param>
+        /// <param name="ct">Cancellation token</param>
+        /// <returns></returns>
+        public WebCallResult<HuobiTransactionResult> TransferAsset(long fromUserId, HuobiAccountType fromAccountType, long fromAccountId,
+            long toUserId, HuobiAccountType toAccountType, long toAccountId, string currency, decimal amount, CancellationToken ct = default) 
+            => TransferAssetAsync(fromUserId, fromAccountType, fromAccountId, toUserId, toAccountType, toAccountId, currency, amount, ct).Result;
+        /// <summary>
+        /// Transfer assets between accounts
+        /// </summary>
+        /// <param name="fromUserId">From user id</param>
+        /// <param name="fromAccountType">From account type</param>
+        /// <param name="fromAccountId">From account id</param>
+        /// <param name="toUserId">To user id</param>
+        /// <param name="toAccountType">To account type</param>
+        /// <param name="toAccountId">To account id</param>
+        /// <param name="currency">Currency to transfer</param>
+        /// <param name="amount">Amount to transfer</param>
+        /// <param name="ct">Cancellation token</param>
+        /// <returns></returns>
+        public async Task<WebCallResult<HuobiTransactionResult>> TransferAssetAsync(long fromUserId, HuobiAccountType fromAccountType, long fromAccountId,
+            long toUserId, HuobiAccountType toAccountType, long toAccountId, string currency, decimal amount, CancellationToken ct = default)
+        {
+            var parameters = new Dictionary<string, object>()
+            {
+                { "from-account-id", fromAccountId.ToString(CultureInfo.InvariantCulture)},
+                { "from-user", fromUserId.ToString(CultureInfo.InvariantCulture)},
+                { "from-account-type", JsonConvert.SerializeObject(fromAccountType, new AccountTypeConverter(false))},
+
+                { "to-account-id", toAccountId.ToString(CultureInfo.InvariantCulture)},
+                { "to-user", toUserId.ToString(CultureInfo.InvariantCulture)},
+                { "to-account-type", JsonConvert.SerializeObject(toAccountType, new AccountTypeConverter(false))},
+                
+                { "currency", currency },
+                { "amount", amount.ToString(CultureInfo.InvariantCulture) },
+            };
+
+            return await SendHuobiRequest<HuobiTransactionResult>(GetUrl(TransferAssetValuationEndpoint, "1"), HttpMethod.Post, ct, parameters, signed: true).ConfigureAwait(false);
+        }
+
+        /// <summary>
         /// Gets a list of amount changes of specified user's account
         /// </summary>
         /// <param name="accountId">The id of the account to get the balances for</param>
@@ -440,6 +588,55 @@ namespace Huobi.Net
             parameters.AddOptionalParameter("size", size);
 
             return await SendHuobiRequest<IEnumerable<HuobiAccountHistory>>(GetUrl(GetAccountHistoryEndpoint, "1"), HttpMethod.Get, ct, parameters, true).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// This endpoint returns the amount changes of specified user's account.
+        /// </summary>
+        /// <param name="accountId">The id of the account to get the ledger for</param>
+        /// <param name="currency">Currency name</param>
+        /// <param name="transactionTypes">Amount change types</param>
+        /// <param name="startTime">Far point of time of the query window. The maximum size of the query window is 10 days. The query window can be shifted within 30 days</param>
+        /// <param name="endTime">Near point of time of the query window. The maximum size of the query window is 10 days. The query window can be shifted within 30 days</param>
+        /// <param name="sort">Sorting order (Ascending by default)</param>
+        /// <param name="size">Maximum number of items in each response (from 1 to 500, default is 100)</param>
+        /// <param name="fromId">Only get orders with ID before or after this. Used together with the direction parameter</param>
+        /// <param name="ct">Cancellation token</param>
+        /// <returns></returns>
+        public WebCallResult<IEnumerable<HuobiLedgerEntry>> GetAccountLedger(long accountId, string? currency = null, IEnumerable<HuobiTransactionType>? transactionTypes = null, DateTime? startTime = null, DateTime? endTime = null, HuobiSortingType? sort = null, int? size = null, long? fromId = null, CancellationToken ct = default)
+            => GetAccountLedgerAsync(accountId, currency, transactionTypes, startTime, endTime, sort, size, fromId, ct).Result;
+
+        /// <summary>
+        /// This endpoint returns the amount changes of specified user's account.
+        /// </summary>
+        /// <param name="accountId">The id of the account to get the ledger for</param>
+        /// <param name="currency">Currency name</param>
+        /// <param name="transactionTypes">Amount change types</param>
+        /// <param name="startTime">Far point of time of the query window. The maximum size of the query window is 10 days. The query window can be shifted within 30 days</param>
+        /// <param name="endTime">Near point of time of the query window. The maximum size of the query window is 10 days. The query window can be shifted within 30 days</param>
+        /// <param name="sort">Sorting order (Ascending by default)</param>
+        /// <param name="size">Maximum number of items in each response (from 1 to 500, default is 100)</param>
+        /// <param name="fromId">Only get orders with ID before or after this. Used together with the direction parameter</param>
+        /// <param name="ct">Cancellation token</param>
+        /// <returns></returns>
+        public async Task<WebCallResult<IEnumerable<HuobiLedgerEntry>>> GetAccountLedgerAsync(long accountId, string? currency = null, IEnumerable<HuobiTransactionType>? transactionTypes = null, DateTime? startTime = null, DateTime? endTime = null, HuobiSortingType? sort = null, int? size = null, long? fromId = null, CancellationToken ct = default)
+        {
+            size?.ValidateIntBetween(nameof(size), 1, 500);
+
+            var transactionTypeConverter = new TransactionTypeConverter(false);
+            var parameters = new Dictionary<string, object>
+            {
+                { "account-id", accountId }
+            };
+            parameters.AddOptionalParameter("currency", currency);
+            parameters.AddOptionalParameter("transact-types", transactionTypes == null ? null : string.Join(",", transactionTypes.Select(s => JsonConvert.SerializeObject(s, transactionTypeConverter))));
+            parameters.AddOptionalParameter("start-time", ToUnixTimestamp(startTime));
+            parameters.AddOptionalParameter("end-time", ToUnixTimestamp(endTime));
+            parameters.AddOptionalParameter("sort", sort == null ? null : JsonConvert.SerializeObject(sort, new SortingTypeConverter(false)));
+            parameters.AddOptionalParameter("limit", size);
+            parameters.AddOptionalParameter("fromId", fromId?.ToString(CultureInfo.InvariantCulture));
+
+            return await SendHuobiRequest<IEnumerable<HuobiLedgerEntry>>(GetUrl(GetAccountHistoryEndpoint, "1"), HttpMethod.Get, ct, parameters, true).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -497,10 +694,7 @@ namespace Huobi.Net
 
             var res = await SendHuobiRequest<long?>(GetUrl(TransferWithSubAccountEndpoint, "1"), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
             if (res.Data == null) // TODO better solution
-                return new WebCallResult<long>(null, null, -1, new UnknownError
-                                                               {
-                                                                   Message = "Failed to transfer, probably not enough balance"
-                                                               });
+                return new WebCallResult<long>(null, null, -1, new UnknownError("Failed to transfer, probably not enough balance"));
             
             return new WebCallResult<long>(res.ResponseStatusCode, res.ResponseHeaders, res.Data.Value, res.Error);
         }
@@ -658,6 +852,36 @@ namespace Huobi.Net
         }
 
         /// <summary>
+        /// Cancel multiple open orders
+        /// </summary>
+        /// <param name="accountId">The account id used for this cancel</param>
+        /// <param name="symbols">The trading symbol list (maximum 10 symbols, default value all symbols)</param>
+        /// <param name="side">Filter on the direction of the trade</param>
+        /// <param name="limit">The number of orders to cancel [1, 100]</param>
+        /// <param name="ct">Cancellation token</param>
+        /// <returns></returns>
+        public WebCallResult<HuobiByCriteriaCancelResult> CancelOrdersByCriteria(long? accountId = null, IEnumerable<string>? symbols = null, HuobiOrderSide? side = null, int? limit = null, CancellationToken ct = default) => CancelOrdersByCriteriaAsync(accountId, symbols, side, limit, ct).Result;
+        /// <summary>
+        /// Cancel multiple open orders
+        /// </summary>
+        /// <param name="accountId">The account id used for this cancel</param>
+        /// <param name="symbols">The trading symbol list (maximum 10 symbols, default value all symbols)</param>
+        /// <param name="side">Filter on the direction of the trade</param>
+        /// <param name="limit">The number of orders to cancel [1, 100]</param>
+        /// <param name="ct">Cancellation token</param>
+        /// <returns></returns>
+        public async Task<WebCallResult<HuobiByCriteriaCancelResult>> CancelOrdersByCriteriaAsync(long? accountId = null, IEnumerable<string>? symbols = null, HuobiOrderSide? side = null, int? limit = null, CancellationToken ct = default)
+        {
+            var parameters = new Dictionary<string, object>();
+            parameters.AddOptionalParameter("account-id", accountId?.ToString(CultureInfo.InvariantCulture));
+            parameters.AddOptionalParameter("symbol", symbols == null ? null : string.Join(",", symbols));
+            parameters.AddOptionalParameter("side", side == null ? null : JsonConvert.SerializeObject(side, new OrderSideConverter(false)));
+            parameters.AddOptionalParameter("size", limit);
+
+            return await SendHuobiRequest<HuobiByCriteriaCancelResult>(GetUrl(CancelOrdersByCriteriaEndpoint, "1"), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
+        }
+
+        /// <summary>
         /// Get details of an order
         /// </summary>
         /// <param name="orderId">The id of the order to retrieve</param>
@@ -724,7 +948,7 @@ namespace Huobi.Net
         /// <param name="types">The types of orders to return</param>
         /// <param name="startTime">Only get orders after this date</param>
         /// <param name="endTime">Only get orders before this date</param>
-        /// <param name="fromId">Only get orders with before or after this. Used together with the direction parameter</param>
+        /// <param name="fromId">Only get orders with ID before or after this. Used together with the direction parameter</param>
         /// <param name="direction">Direction of the results to return when using the fromId parameter</param>
         /// <param name="limit">The max number of results</param>
         /// <param name="ct">Cancellation token</param>
@@ -739,7 +963,7 @@ namespace Huobi.Net
         /// <param name="types">The types of orders to return</param>
         /// <param name="startTime">Only get orders after this date</param>
         /// <param name="endTime">Only get orders before this date</param>
-        /// <param name="fromId">Only get orders with before or after this. Used together with the direction parameter</param>
+        /// <param name="fromId">Only get orders with ID before or after this. Used together with the direction parameter</param>
         /// <param name="direction">Direction of the results to return when using the fromId parameter</param>
         /// <param name="limit">The max number of results</param>
         /// <param name="ct">Cancellation token</param>
@@ -772,7 +996,7 @@ namespace Huobi.Net
         /// <param name="types">The type of orders to return</param>
         /// <param name="startTime">Only get orders after this date</param>
         /// <param name="endTime">Only get orders before this date</param>
-        /// <param name="fromId">Only get orders with before or after this. Used together with the direction parameter</param>
+        /// <param name="fromId">Only get orders with ID before or after this. Used together with the direction parameter</param>
         /// <param name="direction">Direction of the results to return when using the fromId parameter</param>
         /// <param name="limit">The max number of results</param>
         /// <param name="ct">Cancellation token</param>
@@ -788,7 +1012,7 @@ namespace Huobi.Net
         /// <param name="types">The type of orders to return</param>
         /// <param name="startTime">Only get orders after this date</param>
         /// <param name="endTime">Only get orders before this date</param>
-        /// <param name="fromId">Only get orders with before or after this. Used together with the direction parameter</param>
+        /// <param name="fromId">Only get orders with ID before or after this. Used together with the direction parameter</param>
         /// <param name="direction">Direction of the results to return when using the fromId parameter</param>
         /// <param name="limit">The max number of results</param>
         /// <param name="ct">Cancellation token</param>
@@ -817,7 +1041,7 @@ namespace Huobi.Net
         /// <param name="symbol">The symbol to get orders for</param>
         /// <param name="startTime">Only get orders after this date</param>
         /// <param name="endTime">Only get orders before this date</param>
-        /// <param name="direction">Direction of the results to return when using the fromId parameter</param>
+        /// <param name="direction">Direction of the results to return</param>
         /// <param name="limit">The max number of results</param>
         /// <param name="ct">Cancellation token</param>
         /// <returns></returns>
@@ -830,7 +1054,7 @@ namespace Huobi.Net
         /// <param name="symbol">The symbol to get orders for</param>
         /// <param name="startTime">Only get orders after this date</param>
         /// <param name="endTime">Only get orders before this date</param>
-        /// <param name="direction">Direction of the results to return when using the fromId parameter</param>
+        /// <param name="direction">Direction of the results to return</param>
         /// <param name="limit">The max number of results</param>
         /// <param name="ct">Cancellation token</param>
         /// <returns></returns>
@@ -845,6 +1069,18 @@ namespace Huobi.Net
             parameters.AddOptionalParameter("size", limit);
 
             return await SendHuobiRequest<IEnumerable<HuobiOrder>>(GetUrl(HistoryOrdersEndpoint, "1"), HttpMethod.Get, ct, parameters, true).ConfigureAwait(false);
+        }
+
+        private async Task<WebCallResult<T>> SendHuobiV2Request<T>(Uri uri, HttpMethod method, CancellationToken cancellationToken, Dictionary<string, object>? parameters = null, bool signed = false, bool checkResult = true)
+        {
+            var result = await SendRequest<HuobiApiResponseV2<T>>(uri, method, cancellationToken, parameters, signed, checkResult).ConfigureAwait(false);
+            if (!result || result.Data == null)
+                return new WebCallResult<T>(result.ResponseStatusCode, result.ResponseHeaders, default, result.Error);
+
+            if (result.Data.Code != 200)
+                return new WebCallResult<T>(result.ResponseStatusCode, result.ResponseHeaders, default, new ServerError(result.Data.Code, result.Data.Message));
+
+            return new WebCallResult<T>(result.ResponseStatusCode, result.ResponseHeaders, result.Data.Data, null);
         }
 
         private async Task<WebCallResult<(T, DateTime)>> SendHuobiTimestampRequest<T>(Uri uri, HttpMethod method, CancellationToken cancellationToken, Dictionary<string, object>? parameters = null, bool signed = false, bool checkResult = true) 
@@ -873,7 +1109,7 @@ namespace Huobi.Net
 
         /// <inheritdoc />
         protected override IRequest ConstructRequest(Uri uri, HttpMethod method, Dictionary<string, object>? parameters, bool signed, 
-            PostParameters postParameterPosition, ArrayParametersSerialization arraySerialization)
+            PostParameters postParameterPosition, ArrayParametersSerialization arraySerialization, int requestId)
         {
             if (parameters == null)
                 parameters = new Dictionary<string, object>();
@@ -894,7 +1130,7 @@ namespace Huobi.Net
             }
 
             var contentType = requestBodyFormat == RequestBodyFormat.Json ? Constants.JsonContentHeader : Constants.FormContentHeader;
-            var request = RequestFactory.Create(method, uriString);
+            var request = RequestFactory.Create(method, uriString, requestId);
             request.Accept = Constants.JsonContentHeader;
 
             var headers = new Dictionary<string, string>();
@@ -941,7 +1177,7 @@ namespace Huobi.Net
         /// <returns></returns>
         protected Uri GetUrl(string endpoint, string? version = null)
         {
-            return version == null ? new Uri($"{BaseAddress}/{endpoint}") : new Uri($"{BaseAddress}/v{version}/{endpoint}");
+            return version == null ? new Uri($"{BaseAddress}{endpoint}") : new Uri($"{BaseAddress}v{version}/{endpoint}");
         }
 
         private static long? ToUnixTimestamp(DateTime? time)
